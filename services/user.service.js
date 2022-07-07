@@ -27,6 +27,10 @@ const create = async (params) => {
     await db.User.create(params);
 };
 
+const getAll = async () => { 
+    return await db.User.findAll();
+};
+
 module.exports = {
-    authenticate, create
+    authenticate, create, getAll
 }
