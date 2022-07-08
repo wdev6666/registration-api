@@ -14,4 +14,4 @@ const db = require("../_helpers/db");
     ];
 };
 
-module.exports = {authorize}
+module.exports = authorize;

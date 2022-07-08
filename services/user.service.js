@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const db = require("../_helpers/db");
 
- const authenticate = async ({ username, password }) => {
+ const login = async ({ username, password }) => {
     const user = await db.User.scope('withHash').findOne({ where: { username } });
     if (!user || !(await bcrypt.compare(password, user.hash))) throw 'Username or password is incorrect!';
     // Authentication successful
@@ -31,6 +31,11 @@ const getAll = async () => {
     return await db.User.findAll();
 };
 
+const omitHash = (user) => { 
+    const { hash, ...userWithoutHash } = user;
+    return userWithoutHash;
+};
+
 module.exports = {
-    authenticate, create, getAll
+    login, create, getAll
 }

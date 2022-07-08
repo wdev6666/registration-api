@@ -12,4 +12,12 @@ const registerSchema = (req, res, next) => {
     validateRequest(req, next, schema);
 };
 
-module.exports = { registerSchema };
+const loginSchema = (req, res, next) =>{
+    const schema = Joi.object({
+        username: Joi.string().required(),
+        password: Joi.string().required()
+    });
+    validateRequest(req, next, schema);
+}
+
+module.exports = { loginSchema, registerSchema };
