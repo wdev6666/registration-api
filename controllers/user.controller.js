@@ -1,4 +1,5 @@
 const userService = require("../services/user.service");
+const otpService = require("../services/otp.service");
 
 const register = (req, res, next) => {
   userService
@@ -52,6 +53,10 @@ const _delete = (req, res, next) => {
     .catch(next);
 };
 
+const verifyOtp = (req, res, next) => { 
+  otpService.verifyOtp(req.user.id, req.body.email_otp).then(() => res.json({message: "OTP verified!"})).catch(next);
+};
+
 module.exports = {
   register,
   getAll,
@@ -60,4 +65,5 @@ module.exports = {
   getById,
   update,
   delete: _delete,
+  verifyOtp
 };

@@ -2,6 +2,7 @@ const config = require("../config/config.json");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const db = require("../_helpers/db");
+const { sendOtp, generateOtp } = require("./otp.service");
 
 const login = async ({ email, password }) => {
   const user = await db.User.scope("withHash").findOne({ where: { email } });
@@ -13,7 +14,6 @@ const login = async ({ email, password }) => {
 };
 
 const create = async (params) => {
-  console.log(params);
   // Validate
   if (await db.User.findOne({ where: { email: params.email } })) {
     throw 'Email Id"' + params.email + '" is already taken';
@@ -24,8 +24,11 @@ const create = async (params) => {
     params.hash = await bcrypt.hash(params.password, 10);
   }
 
+  params.email_otp = generateOtp();
+
   // Save user
-  await db.User.create(params);
+  const user = await db.User.create(params);
+  sendOtp(user, user.email_otp);
 };
 
 const getAll = async () => {

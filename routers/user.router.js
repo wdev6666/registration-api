@@ -12,5 +12,6 @@ router.get("/current", authorize(), userController.getCurrent);
 router.get("/:id", authorize(), userController.getById);
 router.put("/:id", authorize(), userSchema.updateSchema, userController.update);
 router.delete("/:id", authorize(), userController.delete);
+router.post("/verifyemail", authorize(), userController.verifyOtp);
 
 module.exports = router;

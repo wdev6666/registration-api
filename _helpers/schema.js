@@ -11,6 +11,8 @@ const registerSchema = (req, res, next) => {
     email: Joi.string().email().required(),
     mobile: Joi.string().min(10).max(10).required(),
     role: Joi.string().default("User"),
+    email_otp: Joi.string(),
+    mobile_otp: Joi.string()
   });
   validateRequest(req, next, schema);
 };
@@ -32,6 +34,8 @@ const updateSchema = (req, res, next) => {
     email: Joi.string().empty(""),
     mobile: Joi.string().min(10).max(10).empty(""),
     role: Joi.string().default("User"),
+    email_otp: Joi.string(),
+    mobile_otp: Joi.string()
   });
   validateRequest(req, next, schema);
 };

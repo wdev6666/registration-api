@@ -22,6 +22,8 @@ const model = (sequelize) => {
       unique: { msg: "Mobile number is already in use!" },
     },
     role: { type: DataTypes.STRING, allowNull: false, defaultValue: "User" },
+    email_otp: { type: DataTypes.STRING },
+    mobile_otp: {type: DataTypes.STRING},
     hash: { type: DataTypes.STRING, allowNull: false },
   };
 
