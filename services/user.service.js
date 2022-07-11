@@ -24,11 +24,11 @@ const create = async (params) => {
     params.hash = await bcrypt.hash(params.password, 10);
   }
 
-  params.email_otp = generateOtp();
+  //params.email_otp = generateOtp();
 
   // Save user
   const user = await db.User.create(params);
-  sendOtp(user, user.email_otp);
+  //sendOtp(user, user.email_otp);
 };
 
 const getAll = async () => {

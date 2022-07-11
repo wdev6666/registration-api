@@ -53,8 +53,50 @@ const _delete = (req, res, next) => {
     .catch(next);
 };
 
-const verifyOtp = (req, res, next) => { 
-  otpService.verifyOtp(req.user.id, req.body.email_otp).then(() => res.json({message: "OTP verified!"})).catch(next);
+const sendOtp = (req, res, next) => {
+  const otp = otpService.generateOtp();
+  const user = req.user;
+  otpService.sendOtp(user, otp);
+  user.email_otp = otp;
+  user.email_otp_verified = false;
+  userService.update(user.id, user);
+  res.json({ message: "OTP sent." });
+};
+
+const verifyOtp = (req, res, next) => {
+  const user = req.user;
+  otpService
+    .verifyOtp(req.user.id, req.body.email_otp)
+    .then(() => {
+      user.email_otp = "";
+      user.email_otp_verified = true;
+      userService.update(user.id, user);
+      res.json({ message: "OTP verified!" });
+    })
+    .catch(next);
+};
+
+const sendMobileOtp = (req, res, next) => {
+  const otp = otpService.generateOtp();
+  const user = req.user;
+  otpService.sendMessage(user, otp);
+  user.mobile_otp = otp;
+  user.mobile_otp_verified = false;
+  userService.update(user.id, user);
+  res.json({ message: "OTP sent." });
+};
+
+const verifyMobileOtp = (req, res, next) => {
+  const user = req.user;
+  otpService
+    .verifyOtp(req.user.id, req.body.mobile_otp)
+    .then(() => {
+      user.mobile_otp = "";
+      user.mobile_otp_verified = true;
+      userService.update(user.id, user);
+      res.json({ message: "OTP verified!" });
+    })
+    .catch(next);
 };
 
 module.exports = {
@@ -65,5 +107,8 @@ module.exports = {
   getById,
   update,
   delete: _delete,
-  verifyOtp
+  verifyOtp,
+  sendOtp,
+  sendMobileOtp,
+  verifyMobileOtp,
 };

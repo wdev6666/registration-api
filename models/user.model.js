@@ -23,7 +23,10 @@ const model = (sequelize) => {
     },
     role: { type: DataTypes.STRING, allowNull: false, defaultValue: "User" },
     email_otp: { type: DataTypes.STRING },
-    mobile_otp: {type: DataTypes.STRING},
+    mobile_otp: { type: DataTypes.STRING },
+    active: { type: DataTypes.BOOLEAN },
+    email_otp_verified: { type: DataTypes.BOOLEAN },
+    mobile_otp_verified: { type: DataTypes.BOOLEAN },
     hash: { type: DataTypes.STRING, allowNull: false },
   };
 

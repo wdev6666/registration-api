@@ -12,6 +12,9 @@ router.get("/current", authorize(), userController.getCurrent);
 router.get("/:id", authorize(), userController.getById);
 router.put("/:id", authorize(), userSchema.updateSchema, userController.update);
 router.delete("/:id", authorize(), userController.delete);
-router.post("/verifyemail", authorize(), userController.verifyOtp);
+router.get("/otp/email/generate", authorize(), userController.sendOtp);
+router.post("/otp/email/verify", authorize(), userController.verifyOtp);
+router.get("/otp/mobile/generate", authorize(), userController.sendMobileOtp);
+router.post("/otp/mobile/verify", authorize(), userController.verifyMobileOtp);
 
 module.exports = router;
