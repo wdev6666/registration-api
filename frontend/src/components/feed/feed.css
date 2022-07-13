@@ -1,0 +1,14 @@
+.feed {
+  flex: 5.5;
+}
+
+.feedWrapper {
+  padding: 20px;
+}
+
+.noposts {
+  font-size: larger;
+  align-items: center;
+  text-align: center;
+  margin-top: 30px;
+}
