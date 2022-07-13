@@ -22,7 +22,7 @@ const initialize = async () => {
   // init models and add them to exported db
   db.User = require("../models/user.model")(sequelize);
   db.Post = require("../models/post.model")(sequelize);
-  db.User.hasMany(db.Post, { as: "likes" });
+  db.User.hasMany(db.Post, { as: "posts" });
   db.Post.belongsTo(db.User, {
     as: "User",
   });
