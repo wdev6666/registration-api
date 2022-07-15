@@ -19,13 +19,29 @@ const initialize = async () => {
     dialect: "mysql",
   });
 
+  db.sequelize = sequelize;
+
   // init models and add them to exported db
+  // Older code before added likes table
   db.User = require("../models/user.model")(sequelize);
   db.Post = require("../models/post.model")(sequelize);
+  db.Like = require("../models/like.model")(sequelize);
   db.User.hasMany(db.Post, { as: "posts" });
   db.Post.belongsTo(db.User, {
     as: "User",
   });
+  db.Post.hasMany(db.Like, { as: "likes" });
+  db.Like.belongsTo(db.Post, { as: "Post" });
+  db.User.hasMany(db.Like, { as: "likes" });
+  db.Like.belongsTo(db.User, { as: "User" });
+
+  /*db.User = require("../models/user.model")(sequelize);
+  db.Post = require("../models/post.model")(sequelize);
+  db.Like = require("../models/like.model");
+  db.User.hasMany(db.Post);
+  db.Post.belongsTo(db.User);
+  db.User.hasMany(db.Post, { as: "likes", through: "likes" });
+  db.Post.hasMany(db.User, { as: "likes", through: "likes" });*/
 
   // Sync all models with database
   await sequelize.sync();

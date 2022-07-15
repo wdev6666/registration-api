@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const db = require("../_helpers/db");
 const { sendOtp, generateOtp } = require("./otp.service");
+//const { Sequelize } = require("sequelize/types");
+//const sequelize = new Sequelize();
 
 const login = async ({ email, password }) => {
   const user = await db.User.scope("withHash").findOne({ where: { email } });
@@ -32,7 +34,26 @@ const create = async (params) => {
 };
 
 const getAll = async () => {
-  return await db.User.findAll();
+  //return await db.User.findAll({ attributes: { include: [{ model: db.Post, as: "posts" }] } });
+  return await db.User.findAll({
+    attributes: {
+      include: [
+        [
+          db.sequelize.fn("COUNT", db.sequelize.col("likes.UserId")),
+          "likesCount",
+        ],
+      ],
+    },
+    include: [
+      {
+        model: db.Like,
+        as: "likes",
+        though: "likes",
+        attributes: [],
+        required: false,
+      },
+    ],
+  });
 };
 
 const update = async (userId, params) => {
