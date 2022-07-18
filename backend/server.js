@@ -8,6 +8,7 @@ app.use(bodyParser.json());
 
 app.use("/users", require("./routers/user.router"));
 app.use("/posts", require("./routers/post.router"));
+app.use("/test", require("./routers/test.router"));
 
 // Global error handler
 app.use(errorHandler);
