@@ -7,7 +7,13 @@ const { sendOtp, generateOtp } = require("./otp.service");
 //const sequelize = new Sequelize();
 
 const login = async ({ email, password }) => {
-  const user = await db.User.scope("withHash").findOne({ where: { email } });
+  const user = await db.User.scope("withHash").findOne({
+    where: { email },
+    //include: [
+    //  { model: db.User, attributes: ["id"], as: "followers" },
+    //  { model: db.User, attributes: ["id"], as: "followings" },
+    //],
+  });
   if (!user || !(await bcrypt.compare(password, user.hash)))
     throw "Username or password is incorrect!";
   // Authentication successful
@@ -36,23 +42,7 @@ const create = async (params) => {
 const getAll = async () => {
   //return await db.User.findAll({ attributes: { include: [{ model: db.Post, as: "posts" }] } });
   return await db.User.findAll({
-    attributes: {
-      include: [
-        [
-          db.sequelize.fn("COUNT", db.sequelize.col("likes.UserId")),
-          "likesCount",
-        ],
-      ],
-    },
-    include: [
-      {
-        model: db.Like,
-        as: "likes",
-        though: "likes",
-        attributes: [],
-        required: false,
-      },
-    ],
+    include: [{ model: db.Post, as: "posts" }],
   });
 };
 
@@ -82,6 +72,14 @@ const _delete = async (userId) => {
   await user.destroy();
 };
 
+const follow = async (userId, followerId) => {
+  let user = await db.User.findByPk(userId);
+  const { followable, follower } = await validateFollowable(userId, followerId);
+  await followable.addFollower(follower);
+  //user.addFollower(follower);
+  //user.save();
+};
+
 // Helper functions
 
 const getUser = async (userId) => {
@@ -90,9 +88,33 @@ const getUser = async (userId) => {
   return user;
 };
 
+const getFriends = async (userId) => {
+  if (userId) return [];
+  return [];
+};
+
 const omitHash = (user) => {
   const { hash, ...userWithoutHash } = user;
   return userWithoutHash;
+};
+
+const validateFollowable = async (userId, id) => {
+  try {
+    const follower = await db.User.findOne({
+      where: { id: userId },
+    });
+
+    const profile = await db.User.findOne({ where: { id } });
+    if (follower.id === profile.userId) {
+      throw "MESSAGE.FOLLOW_ERROR1";
+    }
+
+    const followable = await profile.get();
+
+    return { followable, follower };
+  } catch (error) {
+    throw error;
+  }
 };
 
 module.exports = {
@@ -102,4 +124,6 @@ module.exports = {
   getUser,
   update,
   delete: _delete,
+  getFriends,
+  follow,
 };

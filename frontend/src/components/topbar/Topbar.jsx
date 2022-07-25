@@ -1,4 +1,10 @@
-import { Search, Person, Chat, Notifications, ExitToApp } from "@material-ui/icons";
+import {
+  Search,
+  Person,
+  Chat,
+  Notifications,
+  ExitToApp,
+} from "@material-ui/icons";
 import "./topbar.css";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
@@ -29,7 +35,13 @@ export default function Topbar() {
       <div className="topbarRight">
         <div className="topbarLinks">
           <span className="topbarLink">Timeline</span>
-          <span className="topbarLink" style={{cursor: "pointer"}} onClick={handleLogout}>Logout</span>
+          <span
+            className="topbarLink"
+            style={{ cursor: "pointer" }}
+            onClick={handleLogout}
+          >
+            Logout
+          </span>
         </div>
         <div className="topbarIcons">
           <div className="topbarIconItem">
@@ -45,7 +57,7 @@ export default function Topbar() {
             <span className="topbarIconBadge">1</span>
           </div>
         </div>
-        <Link to={`/profile/${user.username}`}>
+        <Link to={`/profile/${user.id}`}>
           <img
             src={
               user.profilePicture

@@ -28,4 +28,11 @@ const likePost = (req, res, next) => {
     .catch(next);
 };
 
-module.exports = { createPost, getPosts, getPost, likePost };
+const getTimeline = (req, res, next) => {
+  postService
+    .getTimeline(req.user.id)
+    .then((data) => res.json(data))
+    .catch(next);
+};
+
+module.exports = { createPost, getPosts, getPost, likePost, getTimeline };

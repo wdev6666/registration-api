@@ -6,6 +6,7 @@ import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import { authRequest } from "../../_helpers/auth-request";
 
 export default function Post({ post }) {
   const [like, setLike] = useState(post.likes.length);
@@ -16,16 +17,19 @@ export default function Post({ post }) {
   const { user: currentUser } = useContext(AuthContext);
 
   useEffect(() => {
-    setIsLiked(post.likes.includes(currentUser._id));
-  }, [currentUser._id, post.likes]);
+    setIsLiked(post.likes.includes(currentUser.id));
+  }, [currentUser.id, post.likes]);
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await axios.get(`/api/users?userId=${post.userId}`);
+      const res = await axios.get(
+        `/users/${post.UserId}`,
+        authRequest(currentUser)
+      );
       setUser(res.data);
     };
     fetchUser();
-  }, [post.userId]);
+  }, [post.UserId, currentUser]);
 
   const likeHandler = () => {
     try {
@@ -39,8 +43,8 @@ export default function Post({ post }) {
 
   const handleDelete = async () => {
     try {
-      await axios.delete("/posts/" + post._id, {
-        data: { userId: currentUser._id },
+      await axios.delete("/posts/" + post.id, {
+        data: { UserId: currentUser.id },
       });
       window.location.reload();
     } catch (e) {
@@ -54,7 +58,7 @@ export default function Post({ post }) {
       <div className="postWrapper">
         <div className="postTop">
           <div className="postTopLeft">
-            <Link to={`/profile/${user.username}`}>
+            <Link to={`/profile/${user.id}`}>
               <img
                 src={
                   user.profilePicture
@@ -69,7 +73,7 @@ export default function Post({ post }) {
             <span className="postDate">{format(post.createdAt)}</span>
           </div>
           <div className="postTopRight">
-            {currentUser && currentUser._id === post.userId && (
+            {currentUser && currentUser.id === post.UserId && (
               <MoreVert
                 className="postTopRightBtn"
                 onClick={() => setMoreOptions(!moreOptions)}

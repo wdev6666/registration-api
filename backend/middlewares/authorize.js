@@ -7,7 +7,7 @@ const authorize = () => {
     expressJwt({ secret, algorithms: ["HS256"] }),
     async (req, res, next) => {
       const user = await db.User.findByPk(req.user.sub);
-      if (user.role !== "Admin")
+      if (user === null || user.role !== "Admin")
         return res.status(401).json({ message: "Unauthorized" });
       req.user = user.get();
       next();

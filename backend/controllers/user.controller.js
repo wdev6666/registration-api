@@ -53,6 +53,20 @@ const _delete = (req, res, next) => {
     .catch(next);
 };
 
+const getFriends = (req, res, next) => {
+  userService
+    .getFriends(req.params.id)
+    .then((friends) => res.json(friends))
+    .catch(next);
+};
+
+const follow = (req, res, next) => {
+  userService
+    .follow(req.user.id, req.params.id)
+    .then(() => res.json({ message: "Followed" }))
+    .catch(next);
+};
+
 const sendOtp = (req, res, next) => {
   const otp = otpService.generateOtp();
   const user = req.user;
@@ -107,6 +121,8 @@ module.exports = {
   getById,
   update,
   delete: _delete,
+  getFriends,
+  follow,
   verifyOtp,
   sendOtp,
   sendMobileOtp,

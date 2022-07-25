@@ -17,13 +17,18 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={user ? <Home /> : <Login />} />
+        <Route path="/" element={user !== null ? <Home /> : <Login />} />
         <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
         <Route
           path="/register"
           element={user ? <Navigate to="/" /> : <Register />}
         />
-        <Route path="/profile/:username" element={user ? <Profile /> : <Navigate to="/" /> } />
+        <Route
+          path="/profile/:id"
+          element={
+            user !== null ? <Profile currentUser={user} /> : <Navigate to="/" />
+          }
+        />
       </Routes>
     </Router>
   );

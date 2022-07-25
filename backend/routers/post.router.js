@@ -5,7 +5,8 @@ const postController = require("../controllers/post.controller");
 
 router.get("/", authorize(), postController.getPosts);
 router.post("/", authorize(), postController.createPost);
-router.get("/:id", authorize(), postController.getPost);
+//router.get("/:id", authorize(), postController.getPost);
 router.post("/:id/like", authorize(), postController.likePost);
+router.get("/", authorize(), postController.getTimeline);
 
 module.exports = router;

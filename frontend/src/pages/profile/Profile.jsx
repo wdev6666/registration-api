@@ -5,20 +5,24 @@ import Feed from "../../components/feed/Feed";
 import Rightbar from "../../components/rightbar/Rightbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Topbar from "../../components/topbar/Topbar";
+import { authRequest } from "../../_helpers/auth-request";
 import "./profile.css";
 
-export default function Profile() {
+export default function Profile({ currentUser }) {
   const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER;
   const [user, setUser] = useState({});
   const params = useParams();
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await axios.get(`/users?username=${params.username}`);
+      const res = await axios.get(
+        `/users/${params.id}`,
+        authRequest(currentUser)
+      );
       setUser(res.data);
     };
     fetchUser();
-  }, [params.username]);
+  }, [params.id, currentUser]);
   return (
     <>
       <Topbar />
@@ -47,12 +51,12 @@ export default function Profile() {
               />
             </div>
             <div className="profileInfo">
-              <h4 className="profileInfoName">{user.username}</h4>
-              <span className="profileInfoDesc">Hi</span>
+              <h4 className="profileInfoName">{user.firstName}</h4>
+              <span className="profileInfoDesc">{user.lastName}</span>
             </div>
           </div>
           <div className="profileRightBottom">
-            <Feed username={params.username} />
+            <Feed id={params.id} />
             <Rightbar user={user} />
           </div>
         </div>
