@@ -12,14 +12,9 @@ app.use("/images", express.static(path.join(__dirname, "public/images")));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-<<<<<<< HEAD
 app.use("/api/users", require("./routers/user.router"));
 app.use("/api/posts", require("./routers/post.router"));
-=======
-app.use("/users", require("./routers/user.router"));
-app.use("/posts", require("./routers/post.router"));
-app.use("/test", require("./routers/test.router"));
->>>>>>> d6317e7ae50c5c027716c8aaf467f74ae9212a8b
+app.use("/api/test", require("./routers/test.router"));
 
 // Global error handler
 app.use(errorHandler);

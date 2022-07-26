@@ -72,12 +72,28 @@ const _delete = async (userId) => {
   await user.destroy();
 };
 
-const follow = async (userId, followerId) => {
-  let user = await db.User.findByPk(userId);
-  const { followable, follower } = await validateFollowable(userId, followerId);
-  await followable.addFollower(follower);
-  //user.addFollower(follower);
-  //user.save();
+const follow = async (FollowId, UserId) => {
+  let follow = await db.Follower.findOne({
+    where: { FollowId: FollowId, UserId: UserId },
+  });
+  if (follow === null) {
+    follow = await db.Follower.create({ FollowId: FollowId, UserId: UserId });
+    return follow;
+  } else {
+    throw new Error(`You are following user with userId: ${UserId} already!`);
+  }
+};
+
+const unfollow = async (FollowId, UserId) => {
+  let follow = await db.Follower.findOne({
+    where: { FollowId: FollowId, UserId: UserId },
+  });
+  if (follow !== null) {
+    await follow.destroy();
+    return follow;
+  } else {
+    throw new Error(`You are not following user with userId: ${UserId}!`);
+  }
 };
 
 // Helper functions
@@ -98,25 +114,6 @@ const omitHash = (user) => {
   return userWithoutHash;
 };
 
-const validateFollowable = async (userId, id) => {
-  try {
-    const follower = await db.User.findOne({
-      where: { id: userId },
-    });
-
-    const profile = await db.User.findOne({ where: { id } });
-    if (follower.id === profile.userId) {
-      throw "MESSAGE.FOLLOW_ERROR1";
-    }
-
-    const followable = await profile.get();
-
-    return { followable, follower };
-  } catch (error) {
-    throw error;
-  }
-};
-
 module.exports = {
   login,
   create,
@@ -126,4 +123,5 @@ module.exports = {
   delete: _delete,
   getFriends,
   follow,
+  unfollow,
 };

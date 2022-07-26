@@ -26,6 +26,7 @@ const initialize = async () => {
   db.User = require("../models/user.model")(sequelize);
   db.Post = require("../models/post.model")(sequelize);
   db.Like = require("../models/like.model")(sequelize);
+  db.Follower = require("../models/follower.model")(sequelize);
   db.User.hasMany(db.Post, { as: "posts" });
   db.Post.belongsTo(db.User, {
     as: "User",
@@ -34,18 +35,10 @@ const initialize = async () => {
   db.Like.belongsTo(db.Post, { as: "Post" });
   db.User.hasMany(db.Like, { as: "likes" });
   db.Like.belongsTo(db.User, { as: "User" });
-  db.User.associate = (models) => {
-    db.User.belongsToMany(models.User, {
-      foreignKey: "userId",
-      as: "followers",
-      through: models.UserFollowers,
-    });
-    db.User.belongsToMany(models.User, {
-      foreignKey: "followerId",
-      as: "following",
-      through: models.UserFollowers,
-    });
-  };
+
+  db.User.belongsToMany(db.User, { through: db.Follower, as: "Follows" });
+  db.Follower.belongsTo(db.User);
+  db.User.hasMany(db.Follower);
 
   /*db.User = require("../models/user.model")(sequelize);
   db.Post = require("../models/post.model")(sequelize);

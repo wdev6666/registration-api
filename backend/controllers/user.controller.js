@@ -62,8 +62,15 @@ const getFriends = (req, res, next) => {
 
 const follow = (req, res, next) => {
   userService
-    .follow(req.user.id, req.params.id)
+    .follow(req.user.id, req.body.UserId)
     .then(() => res.json({ message: "Followed" }))
+    .catch(next);
+};
+
+const unfollow = (req, res, next) => {
+  userService
+    .unfollow(req.user.id, req.body.UserId)
+    .then(() => res.json({ message: "Unfollowed" }))
     .catch(next);
 };
 
@@ -123,6 +130,7 @@ module.exports = {
   delete: _delete,
   getFriends,
   follow,
+  unfollow,
   verifyOtp,
   sendOtp,
   sendMobileOtp,
