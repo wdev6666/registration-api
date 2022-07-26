@@ -10,8 +10,7 @@ const login = async ({ email, password }) => {
   const user = await db.User.scope("withHash").findOne({
     where: { email },
     //include: [
-    //  { model: db.User, attributes: ["id"], as: "followers" },
-    //  { model: db.User, attributes: ["id"], as: "followings" },
+    //  { model: db.Follower, attributes: ["FollowId"]},
     //],
   });
   if (!user || !(await bcrypt.compare(password, user.hash)))
@@ -42,7 +41,7 @@ const create = async (params) => {
 const getAll = async () => {
   //return await db.User.findAll({ attributes: { include: [{ model: db.Post, as: "posts" }] } });
   return await db.User.findAll({
-    include: [{ model: db.Post, as: "posts" }],
+    include: [{ model: db.Post, as: "posts" }, { model: db.Follower }],
   });
 };
 
@@ -107,6 +106,16 @@ const getUser = async (userId) => {
 const getFriends = async (userId) => {
   if (userId) return [];
   return [];
+};
+
+const getUsersIFollow = async (UserId) => { 
+  const usersIFollow = await db.Follower.findAll({ where: { UserId: UserId } });
+  return usersIFollow.map((user) => { return user.FollowId });
+};
+
+const getUsersFollowMe = async (UserId) => { 
+  const usersFollowMe = await db.Follower.findAll({ where: { FollowId: UserId } });
+  return usersFollowMe.map((user) => { return user.UserId });
 };
 
 const omitHash = (user) => {
