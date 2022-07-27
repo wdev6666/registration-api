@@ -131,6 +131,15 @@ const getUsersFollowMe = async (UserId) => {
   });
 };
 
+const getLikesByUser = async (UserId, PostId) => { 
+  const likes = await db.Like.findAll({
+    where: { UserId: UserId, PostId: PostId },
+  });
+  return likes.map((like) => {
+    return like.id;
+  });
+};
+
 const omitHash = (user) => {
   const { hash, ...userWithoutHash } = user;
   return userWithoutHash;

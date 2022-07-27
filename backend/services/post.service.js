@@ -1,3 +1,5 @@
+const { post } = require("../routers/post.router");
+
 const createPost = async (userId, params) => {
   params.UserId = userId;
   return await db.Post.create(params);
@@ -6,7 +8,8 @@ const createPost = async (userId, params) => {
 const getPosts = async (userId) => {
   return await db.Post.findAll({
     //where: { UserId: userId },
-    include: [{ model: db.Like, attributes: ["id"], as: "likes" }],
+    include: [{ model: db.Like, attributes: ['id'], as: "likes" }],
+    nest: true
     /*attributes: {
       include: [
         [
@@ -26,7 +29,7 @@ const getPosts = async (userId) => {
         required: false,
       },
     ],*/
-  });
+  }).then(posts => posts.map(post => { let newLikes = post.likes.map(like => { return like.id }); post.likes = newLikes; return post }));
 };
 
 const getPost = async (postId) => {
