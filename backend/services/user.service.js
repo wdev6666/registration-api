@@ -9,15 +9,14 @@ const { sendOtp, generateOtp } = require("./otp.service");
 const login = async ({ email, password }) => {
   const user = await db.User.scope("withHash").findOne({
     where: { email },
-    //include: [
-    //  { model: db.Follower, attributes: ["FollowId"]},
-    //],
   });
   if (!user || !(await bcrypt.compare(password, user.hash)))
     throw "Username or password is incorrect!";
   // Authentication successful
   const token = jwt.sign({ sub: user.id }, config.secret, { expiresIn: "7d" });
-  return { ...omitHash(user.get()), token };
+  let loggedInUser = await getUser(user.id);
+  return { ...loggedInUser, token };
+  //return { ...omitHash(user.get()), token };
 };
 
 const create = async (params) => {
@@ -39,10 +38,8 @@ const create = async (params) => {
 };
 
 const getAll = async () => {
-  //return await db.User.findAll({ attributes: { include: [{ model: db.Post, as: "posts" }] } });
-  return await db.User.findAll({
-    include: [{ model: db.Post, as: "posts" }, { model: db.Follower }],
-  });
+  let users = await db.User.findAll();
+  return users;
 };
 
 const update = async (userId, params) => {
@@ -99,8 +96,18 @@ const unfollow = async (FollowId, UserId) => {
 
 const getUser = async (userId) => {
   const user = await db.User.findByPk(userId);
+  let newUser = {};
   if (!user) throw "User not found";
-  return user;
+  const usersIFollow = await getUsersIFollow(userId);
+  const usersFollowMe = await getUsersFollowMe(userId);
+  newUser.id = userId;
+  newUser.firstName = user.firstName;
+  newUser.lastName = user.lastName;
+  newUser.email = user.email;
+  newUser.mobile = user.mobile;
+  newUser.followers = usersIFollow;
+  newUser.followings = usersFollowMe;
+  return newUser;
 };
 
 const getFriends = async (userId) => {
@@ -108,14 +115,20 @@ const getFriends = async (userId) => {
   return [];
 };
 
-const getUsersIFollow = async (UserId) => { 
+const getUsersIFollow = async (UserId) => {
   const usersIFollow = await db.Follower.findAll({ where: { UserId: UserId } });
-  return usersIFollow.map((user) => { return user.FollowId });
+  return usersIFollow.map((user) => {
+    return user.FollowId;
+  });
 };
 
-const getUsersFollowMe = async (UserId) => { 
-  const usersFollowMe = await db.Follower.findAll({ where: { FollowId: UserId } });
-  return usersFollowMe.map((user) => { return user.UserId });
+const getUsersFollowMe = async (UserId) => {
+  const usersFollowMe = await db.Follower.findAll({
+    where: { FollowId: UserId },
+  });
+  return usersFollowMe.map((user) => {
+    return user.UserId;
+  });
 };
 
 const omitHash = (user) => {

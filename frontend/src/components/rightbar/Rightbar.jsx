@@ -13,8 +13,8 @@ export default function Rightbar({ user }) {
   const [friends, setFriends] = useState([]);
   const { user: currentUser, dispatch } = useContext(AuthContext);
   const [followed, setFollowed] = useState(
-    false
-    //currentUser.followings.includes(user?._id)
+    //false
+    currentUser.followings.includes(parseInt(user?.id))
   );
 
   useEffect(() => {
@@ -35,14 +35,16 @@ export default function Rightbar({ user }) {
   const handleClick = async () => {
     try {
       if (followed) {
-        await axios.put("/api/users/" + user.id + "/unfollow", {
-          userId: currentUser.id,
-        });
+        await axios.put(
+          "/api/users/" + user.id + "/unfollow",
+          authRequest(currentUser)
+        );
         dispatch({ type: "UNFOLLOW", payload: user.id });
       } else {
-        await axios.put("/api/users/" + user.id + "/follow", {
-          userId: currentUser.id,
-        });
+        await axios.put(
+          "/api/users/" + user.id + "/follow",
+          authRequest(currentUser)
+        );
         dispatch({ type: "FOLLOW", payload: user.id });
       }
       setFollowed(!followed);
@@ -75,9 +77,14 @@ export default function Rightbar({ user }) {
   };
 
   const ProfileRightbar = () => {
+    console.log(
+      currentUser.followings,
+      user.id,
+      currentUser.followings.includes(parseInt(user.id))
+    );
     return (
       <>
-        {user.username !== currentUser.username && (
+        {user.id !== currentUser.id && (
           <button className="rightbarFollowButton" onClick={handleClick}>
             {followed ? "Unfollow" : "Follow"}
             {followed ? <Remove /> : <Add />}
@@ -101,8 +108,8 @@ export default function Rightbar({ user }) {
         <h4 className="rightbarTitle">User friends </h4>
         <div className="rightbarFollowings">
           {friends.map((friend) => (
-            <Link to={"/profile/" + friend.username} key={friend._id}>
-              <div className="rightbarFollowing" key={friend._id}>
+            <Link to={"/profile/" + friend.id} key={friend.id}>
+              <div className="rightbarFollowing" key={friend.id}>
                 <img
                   src={
                     friend.profilePicture !== ""
@@ -112,7 +119,7 @@ export default function Rightbar({ user }) {
                   alt=""
                   className="rightbarFollowingImg"
                 />
-                <span className="rightbarFollowingNm">{friend.username}</span>
+                <span className="rightbarFollowingNm">{friend.id}</span>
               </div>
             </Link>
           ))}

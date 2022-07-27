@@ -9,6 +9,7 @@ import {
 import { useContext, useState, useRef } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
+import { authRequest } from "../../_helpers/auth-request";
 
 export default function Share() {
   const { user } = useContext(AuthContext);
@@ -19,7 +20,7 @@ export default function Share() {
   const submitHandler = async (e) => {
     e.preventDefault();
     const newPost = {
-      userId: user._id,
+      UserId: user.id,
       desc: desc.current.value,
     };
     if (file) {
@@ -33,7 +34,7 @@ export default function Share() {
       } catch (e) {}
     }
     try {
-      await axios.post("/api/posts", newPost);
+      await axios.post("/posts", newPost, authRequest(user));
       window.location.reload();
     } catch (e) {}
   };

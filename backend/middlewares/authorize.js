@@ -3,6 +3,7 @@ const { secret } = require("../config/config.json");
 const db = require("../_helpers/db");
 
 const authorize = () => {
+  console.log("1");
   return [
     expressJwt({ secret, algorithms: ["HS256"] }),
     async (req, res, next) => {

@@ -17,7 +17,8 @@ export default function Post({ post }) {
   const { user: currentUser } = useContext(AuthContext);
 
   useEffect(() => {
-    setIsLiked(post.likes.includes(currentUser.id));
+    const like = { id: currentUser.id };
+    setIsLiked(post.likes.includes(like));
   }, [currentUser.id, post.likes]);
 
   useEffect(() => {
@@ -33,9 +34,13 @@ export default function Post({ post }) {
 
   const likeHandler = () => {
     try {
-      axios.put("/api/posts/" + post._id + "/like", {
-        userId: currentUser._id,
-      });
+      axios.put(
+        "/posts/" + post.id + "/like",
+        {
+          UserId: currentUser.id,
+        },
+        authRequest(currentUser)
+      );
     } catch (e) {}
     setLike(isLiked ? like - 1 : like + 1);
     setIsLiked(!isLiked);
@@ -69,7 +74,9 @@ export default function Post({ post }) {
                 className="postProfileImg"
               />
             </Link>
-            <span className="postUsername">{user?.username}</span>
+            <span className="postUsername">
+              {user?.firstName} {user?.lastName}
+            </span>
             <span className="postDate">{format(post.createdAt)}</span>
           </div>
           <div className="postTopRight">

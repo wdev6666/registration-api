@@ -5,7 +5,7 @@ const createPost = async (userId, params) => {
 
 const getPosts = async (userId) => {
   return await db.Post.findAll({
-    where: { UserId: userId },
+    //where: { UserId: userId },
     include: [{ model: db.Like, attributes: ["id"], as: "likes" }],
     /*attributes: {
       include: [

@@ -61,15 +61,16 @@ const getFriends = (req, res, next) => {
 };
 
 const follow = (req, res, next) => {
+  console.log("2");
   userService
-    .follow(req.user.id, req.body.UserId)
+    .follow(req.user.id, req.params.UserId)
     .then(() => res.json({ message: "Followed" }))
     .catch(next);
 };
 
 const unfollow = (req, res, next) => {
   userService
-    .unfollow(req.user.id, req.body.UserId)
+    .unfollow(req.user.id, req.params.UserId)
     .then(() => res.json({ message: "Unfollowed" }))
     .catch(next);
 };
