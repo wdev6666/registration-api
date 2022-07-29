@@ -113,9 +113,18 @@ const getUser = async (userId) => {
   return newUser;
 };
 
-const getFriends = async (userId) => {
-  if (userId) return [];
-  return [];
+const getFriends = async (UserId) => {
+  const friendsId = await getUsersFollowMe(UserId);
+  let friends = [];
+  friends = await db.User.findAll({ where: { id: friendsId } });
+  return friends;
+};
+
+const getOnlineFriends = async (UserId) => {
+  const friendsId = await getUsersFollowMe(UserId);
+  let friends = [];
+  friends = await db.User.findAll({ where: { id: friendsId } });
+  return friends;
 };
 
 const getUsersIFollow = async (UserId) => {
@@ -134,7 +143,7 @@ const getUsersFollowMe = async (UserId) => {
   });
 };
 
-const getLikesByUser = async (UserId, PostId) => { 
+const getLikesByUser = async (UserId, PostId) => {
   const likes = await db.Like.findAll({
     where: { UserId: UserId, PostId: PostId },
   });
@@ -156,6 +165,7 @@ module.exports = {
   update,
   delete: _delete,
   getFriends,
+  getOnlineFriends,
   follow,
   unfollow,
 };

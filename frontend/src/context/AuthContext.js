@@ -7,6 +7,8 @@ const INITIAL_STATE = {
     : null,
   isFetching: false,
   error: false,
+  friends: [],
+  onlineFriends: [],
 };
 
 export const AuthContext = createContext(INITIAL_STATE);
@@ -19,6 +21,8 @@ export const AuthContextProvider = ({ children }) => {
         user: state.user,
         isFetching: state.isFetching,
         error: state.error,
+        friends: state.friends,
+        onlineFriends: state.onlineFriends,
         dispatch,
       }}
     >

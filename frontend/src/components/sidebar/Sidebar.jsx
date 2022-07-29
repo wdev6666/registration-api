@@ -13,8 +13,11 @@ import {
 
 import { Users } from "../../dummyData";
 import CloseFriend from "../closeFriend/CloseFriend";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function Sidebar() {
+  const { friends } = useContext(AuthContext);
   return (
     <div className="sidebar">
       <div className="sidebarWrapper">
@@ -58,10 +61,13 @@ export default function Sidebar() {
         </ul>
         <button className="sidebarButton">Show More</button>
         <hr className="sidebarHr" />
+        <h4 className="sidebarTitle">Friends </h4>
         <ul className="sidebarFriendList">
-          {Users.map((u) => (
-            <CloseFriend key={u.id} user={u} />
-          ))}
+          {friends && friends.length !== 0 ? (
+            friends.map((u) => <CloseFriend key={u.id} user={u} />)
+          ) : (
+            <h5>No friends</h5>
+          )}
         </ul>
       </div>
     </div>

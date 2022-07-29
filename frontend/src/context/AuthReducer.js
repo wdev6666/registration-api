@@ -37,6 +37,12 @@ const AuthReducer = (state, action) => {
           ),
         },
       };
+
+    case "FRIENDS":
+      return {
+        ...state,
+        friends: action.payload,
+      };
     default:
       return state;
   }

@@ -13,7 +13,9 @@ export default function CloseFriend({ user }) {
         alt=""
         className="sidebarFriendImg"
       />
-      <span className="sidebarFriendName">{user.username}</span>
+      <span className="sidebarFriendName">
+        {user.firstName} {user.lastName}
+      </span>
     </li>
   );
 }

@@ -56,7 +56,14 @@ const _delete = (req, res, next) => {
 
 const getFriends = (req, res, next) => {
   userService
-    .getFriends(req.params.id)
+    .getFriends(req.user.id)
+    .then((friends) => res.json(friends))
+    .catch(next);
+};
+
+const getOnlineFriends = (req, res, next) => {
+  userService
+    .getOnlineFriends(req.user.id)
     .then((friends) => res.json(friends))
     .catch(next);
 };
@@ -130,6 +137,7 @@ module.exports = {
   update,
   delete: _delete,
   getFriends,
+  getOnlineFriends,
   follow,
   unfollow,
   verifyOtp,

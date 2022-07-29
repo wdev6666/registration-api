@@ -10,8 +10,7 @@ import { authRequest } from "../../_helpers/auth-request";
 
 export default function Rightbar({ user }) {
   const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER;
-  const [friends, setFriends] = useState([]);
-  const { user: currentUser, dispatch } = useContext(AuthContext);
+  const { user: currentUser, dispatch, friends } = useContext(AuthContext);
 
   const [followed, setFollowed] = useState(
     currentUser.followings.includes(parseInt(user?.id))
@@ -24,7 +23,6 @@ export default function Rightbar({ user }) {
           "/users/friends/" + user.id,
           authRequest(currentUser)
         );
-        setFriends(friendList.data);
       } catch (e) {
         console.log(e);
       }
@@ -68,9 +66,11 @@ export default function Rightbar({ user }) {
         <img src={`${PUBLIC_FOLDER}ad.png`} alt="" className="rightbarAd" />
         <h4 className="rightarTitle">Online Friends</h4>
         <ul className="rightbarFriendList">
-          {Users.map((u) => (
-            <Online user={u} key={u.id} />
-          ))}
+          {friends && friends.length !== 0 ? (
+            friends.map((u) => <Online key={u.id} user={u} />)
+          ) : (
+            <h5>No friends</h5>
+          )}
         </ul>
       </>
     );

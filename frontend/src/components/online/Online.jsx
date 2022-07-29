@@ -17,7 +17,9 @@ export default function Online({ user }) {
           />
           <span className="rightbarOnline"></span>
         </div>
-        <span className="rightbarUsername">{user.username}</span>
+        <span className="rightbarUsername">
+          {user.firstName} {user.lastName}
+        </span>
       </li>
     </div>
   );

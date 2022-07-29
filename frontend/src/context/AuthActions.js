@@ -21,3 +21,13 @@ export const Unfollow = (userId) => ({
   type: "UNFOLLOW",
   payload: userId,
 });
+
+export const FetchFriends = (friends) => ({
+  type: "FRIENDS",
+  payload: friends,
+});
+
+export const OnlineFetchFriends = (Onlinefriends) => ({
+  type: "ONLINE_FRIENDS",
+  payload: Onlinefriends,
+});
