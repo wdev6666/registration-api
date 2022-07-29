@@ -4,14 +4,14 @@ import { useNavigate } from "react-router-dom";
 import "./register.css";
 
 export default function Register() {
-  const username = useRef();
   const email = useRef();
   const password = useRef();
   const passwordAgain = useRef();
   const city = useRef();
   const from = useRef();
-  const firstname = useRef();
-  const lastname = useRef();
+  const mobile = useRef();
+  const firstName = useRef(null);
+  const lastName = useRef();
   const navigate = useNavigate();
 
   const handleClick = async (e) => {
@@ -20,12 +20,14 @@ export default function Register() {
       password.current.setCustomValidity("Password don't match!");
     } else {
       const user = {
-        username: username.current.value,
+        firstName: firstName.current.value,
+        lastName: lastName.current.value,
         email: email.current.value,
         password: password.current.value,
+        mobile: mobile.current.value,
       };
       try {
-        await axios.post("/api/auth/register", user);
+        await axios.post("/users/register", user);
         navigate("/login");
       } catch (e) {
         console.log(e);
@@ -46,12 +48,18 @@ export default function Register() {
           <span className="loginDesc">Connect here!</span>
         </div>
         <div className="loginRight">
-          <form className="loginBox">
+          <form className="loginBox" onSubmit={handleClick}>
             <input
               type="text"
-              placeholder="Username"
+              placeholder="First Name"
               className="loginInput"
-              ref={username}
+              ref={firstName}
+            />
+            <input
+              type="text"
+              placeholder="Last Name"
+              className="loginInput"
+              ref={lastName}
             />
             <input
               placeholder="Email"
@@ -71,9 +79,13 @@ export default function Register() {
               className="loginInput"
               ref={passwordAgain}
             />
-            <button className="loginButton" onClick={handleClick}>
-              Sign up
-            </button>
+            <input
+              type="number"
+              placeholder="Mobile Number"
+              className="loginInput"
+              ref={mobile}
+            />
+            <button className="loginButton">Sign up</button>
             <button className="loginRegisterButton" onClick={handleLoginClick}>
               Log into account
             </button>

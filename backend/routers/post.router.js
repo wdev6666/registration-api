@@ -8,5 +8,6 @@ router.post("/", authorize(), postController.createPost);
 //router.get("/:id", authorize(), postController.getPost);
 router.put("/:id/like", authorize(), postController.likePost);
 router.get("/", authorize(), postController.getTimeline);
+router.get("/profile/:UserId", authorize(), postController.getPosts);
 
 module.exports = router;

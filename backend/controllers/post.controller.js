@@ -8,8 +8,9 @@ const createPost = (req, res, next) => {
 };
 
 const getPosts = (req, res, next) => {
+  const userId = req.params.UserId ? req.params.UserId : null;
   postService
-    .getPosts(req.user.id)
+    .getPosts(userId)
     .then((posts) => res.json(posts))
     .catch(next);
 };

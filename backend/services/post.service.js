@@ -4,28 +4,26 @@ const createPost = async (userId, params) => {
 };
 
 const getPosts = async (userId) => {
+  let where = {};
+  if (userId !== null) where = { UserId: userId };
   return await db.Post.findAll({
-    //where: { UserId: userId },
-    include: [{ model: db.Like, attributes: ["id"], as: "likes" }],
-    /*attributes: {
-      include: [
-        [
-          db.Like,
-          "likes",
-          //db.sequelize.fn("COUNT", db.sequelize.col("likes.PostId")),
-          //"likesCount",
-        ],
-      ],
-    },
-    include: [
-      {
-        model: db.Like,
-        as: "likes",
-        though: "likes",
-        attributes: [],
-        required: false,
-      },
-    ],*/
+    where: where,
+    include: [{ model: db.Like, attributes: ["UserId"], as: "likes" }],
+  }).then((posts) => {
+    return posts.map((post) => {
+      let p = {
+        id: post.id,
+        desc: post.desc,
+        img: post.img,
+        createdAt: post.createdAt,
+        updatedAt: post.updatedAt,
+        UserId: post.UserId,
+        likes: post.likes.map((like) => {
+          return parseInt(like.UserId);
+        }),
+      };
+      return p;
+    });
   });
 };
 
@@ -53,11 +51,13 @@ const getPost = async (postId) => {
 
 const likePost = async (postId, userId) => {
   const like = { PostId: postId, UserId: userId };
-  return await db.Like.create(like);
+  const l = await db.Like.findOne({ where: like });
+  if (l) l.destroy();
+  else await db.Like.create(like);
 };
 
 const getTimeline = async (userId) => {
-  return [];
+  return getPosts(userId);
 };
 
 module.exports = { createPost, getPosts, getPost, likePost, getTimeline };

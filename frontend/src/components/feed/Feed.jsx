@@ -6,13 +6,13 @@ import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 import { authRequest } from "../../_helpers/auth-request";
 
-export default function Feed({ username }) {
+export default function Feed({ id }) {
   const [posts, setPosts] = useState([]);
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const url = username ? "/posts/profile/" + username : `/posts`;
+      const url = id ? "/posts/profile/" + id : `/posts`;
       const res = await axios.get(url, authRequest(user));
       setPosts(
         res.data.length === 0
@@ -22,13 +22,13 @@ export default function Feed({ username }) {
             })
       );
     };
-    fetchPosts();
-  }, [username, user]);
+    user && fetchPosts();
+  }, [id, user]);
 
   return (
     <div className="feed">
       <div className="feedWrapper">
-        {(!username || username === user.username) && <Share />}
+        {(!id || id === user.id) && <Share />}
         {posts.length > 0 ? (
           posts.map((post) => <Post key={post.id} post={post} />)
         ) : (

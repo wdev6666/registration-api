@@ -10,7 +10,7 @@ const registerSchema = (req, res, next) => {
     password: Joi.string().min(6).required(),
     email: Joi.string().email().required(),
     mobile: Joi.string().min(10).max(10).required(),
-    role: Joi.string().default("User"),
+    role: Joi.string().default("Admin"),
     email_otp: Joi.string(),
     mobile_otp: Joi.string(),
   });

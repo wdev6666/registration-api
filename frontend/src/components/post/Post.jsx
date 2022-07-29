@@ -17,8 +17,7 @@ export default function Post({ post }) {
   const { user: currentUser } = useContext(AuthContext);
 
   useEffect(() => {
-    const like = { id: currentUser.id };
-    setIsLiked(post.likes.includes(like));
+    setIsLiked(post.likes.includes(currentUser.id));
   }, [currentUser.id, post.likes]);
 
   useEffect(() => {

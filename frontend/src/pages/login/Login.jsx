@@ -1,4 +1,4 @@
-import { useRef, useContext } from "react";
+import { useRef, useContext, useEffect } from "react";
 import "./login.css";
 import { loginCall } from "../../apiCalls";
 import { AuthContext } from "../../context/AuthContext";
@@ -10,6 +10,10 @@ export default function Login() {
   const password = useRef();
   const { user, isFetching, error, dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (error) alert(error);
+  }, [user, error]);
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -49,11 +53,18 @@ export default function Login() {
               placeholder="Password"
               className="loginInput"
             />
-            <button className="loginButton" disabled={isFetching} onClick={handleClick}>
+            <button
+              className="loginButton"
+              disabled={isFetching}
+              onClick={handleClick}
+            >
               {isFetching ? <CircularProgress size="20px" /> : "Login"}
             </button>
             <span className="loginForgot">Forgot password?</span>
-            <button className="loginRegisterButton" onClick={handleRegistrationClick}>
+            <button
+              className="loginRegisterButton"
+              onClick={handleRegistrationClick}
+            >
               {isFetching ? (
                 <CircularProgress size="20px" />
               ) : (

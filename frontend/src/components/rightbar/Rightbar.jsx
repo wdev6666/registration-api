@@ -12,8 +12,8 @@ export default function Rightbar({ user }) {
   const PUBLIC_FOLDER = process.env.REACT_APP_PUBLIC_FOLDER;
   const [friends, setFriends] = useState([]);
   const { user: currentUser, dispatch } = useContext(AuthContext);
+
   const [followed, setFollowed] = useState(
-    //false
     currentUser.followings.includes(parseInt(user?.id))
   );
 
@@ -30,7 +30,7 @@ export default function Rightbar({ user }) {
       }
     };
     user && getFriends();
-  }, [user?.id]);
+  }, [user]);
 
   const handleClick = async () => {
     try {
@@ -77,14 +77,9 @@ export default function Rightbar({ user }) {
   };
 
   const ProfileRightbar = () => {
-    console.log(
-      currentUser.followings,
-      user.id,
-      currentUser.followings.includes(parseInt(user.id))
-    );
     return (
       <>
-        {user.id !== currentUser.id && (
+        {user.id != currentUser.id && (
           <button className="rightbarFollowButton" onClick={handleClick}>
             {followed ? "Unfollow" : "Follow"}
             {followed ? <Remove /> : <Add />}

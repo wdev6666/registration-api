@@ -30,6 +30,9 @@ const create = async (params) => {
     params.hash = await bcrypt.hash(params.password, 10);
   }
 
+  // If no role provided
+  if (params.role === undefined || params.role === null || params.role === "")
+    params.role = "Admin";
   //params.email_otp = generateOtp();
 
   // Save user
@@ -64,7 +67,7 @@ const update = async (userId, params) => {
 };
 
 const _delete = async (userId) => {
-  const user = await getUser(userId);
+  const user = await db.User.findByPk(userId);
   await user.destroy();
 };
 

@@ -2,6 +2,7 @@ const userService = require("../services/user.service");
 const otpService = require("../services/otp.service");
 
 const register = (req, res, next) => {
+  console.log(req.body);
   userService
     .create(req.body)
     .then(() => {
@@ -61,7 +62,6 @@ const getFriends = (req, res, next) => {
 };
 
 const follow = (req, res, next) => {
-  console.log("2");
   userService
     .follow(req.user.id, req.params.UserId)
     .then(() => res.json({ message: "Followed" }))
