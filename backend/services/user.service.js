@@ -116,14 +116,16 @@ const getUser = async (userId) => {
 const getFriends = async (UserId) => {
   const friendsId = await getUsersFollowMe(UserId);
   let friends = [];
-  friends = await db.User.findAll({ where: { id: friendsId } });
+  if (friendsId.length > 0)
+    friends = await db.User.findAll({ where: { id: friendsId } });
   return friends;
 };
 
 const getOnlineFriends = async (UserId) => {
   const friendsId = await getUsersFollowMe(UserId);
   let friends = [];
-  friends = await db.User.findAll({ where: { id: friendsId } });
+  if (friendsId.length > 0)
+    friends = await db.User.findAll({ where: { id: friendsId } });
   return friends;
 };
 

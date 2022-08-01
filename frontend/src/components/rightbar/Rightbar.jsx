@@ -34,13 +34,15 @@ export default function Rightbar({ user }) {
     try {
       if (followed) {
         await axios.put(
-          "/api/users/" + user.id + "/unfollow",
+          "/users/" + user.id + "/unfollow",
+          {},
           authRequest(currentUser)
         );
         dispatch({ type: "UNFOLLOW", payload: user.id });
       } else {
         await axios.put(
-          "/api/users/" + user.id + "/follow",
+          "/users/" + user.id + "/follow",
+          {},
           authRequest(currentUser)
         );
         dispatch({ type: "FOLLOW", payload: user.id });
